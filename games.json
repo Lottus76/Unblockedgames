@@ -1,10 +1,10 @@
 [
-    {
-        "id": "game-1",
-        "title": "Example Game One",
-        "thumbnail": "https://via.placeholder.com/220x140?text=Game+1",
-        "embedUrl": "https://example.com/game1/index.html"
-    },
+{
+        "id": "subway-surfers",
+        "title": "Subway Surfers",
+        "thumbnail": "https://images.crazygames.com/subway-surfers_16x9/20240327110903/subway-surfers_16x9-cover?auto=format,compress&q=75&w=1200",
+        "embedUrl": "https://www.crazygames.com/embed/subway-surfers"
+    }
     {
         "id": "game-2",
         "title": "Example Game Two",
