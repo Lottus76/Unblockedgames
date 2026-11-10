@@ -5,10 +5,10 @@
         "thumbnail": "https://images.crazygames.com/subway-surfers_16x9/20240327110903/subway-surfers_16x9-cover?auto=format,compress&q=75&w=1200",
         "embedUrl": "https://www.crazygames.com/embed/subway-surfers"
     },
-    {
-        "id": "game-2",
-        "title": "Example Game Two",
-        "thumbnail": "https://via.placeholder.com/220x140?text=Game+2",
-        "embedUrl": "https://example.com/game2/index.html"
+{
+        "id": "snow-rider-3d",
+        "title": "Snow Rider 3D",
+        "thumbnail": "https://img.gamedistribution.com/1d5a7d7b5b8d4f4e8b81237190e25b1c-512x384.jpeg",
+        "embedUrl": "https://www.hoodamath.com/mobile/games/snow-rider-3d/game.html"
     }
 ]
