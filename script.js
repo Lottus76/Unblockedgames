@@ -57,23 +57,3 @@ searchInput.addEventListener('input', (e) => {
     const filtered = allGames.filter(game => game.title.toLowerCase().includes(term));
     displayGames(filtered);
 });
-
-fetchGames();
-
-function toggleFullscreen() {
-    var iframe = document.getElementById("game-frame");
-
-    if (!document.fullscreenElement) {
-        if (iframe.requestFullscreen) {
-            iframe.requestFullscreen();
-        } else if (iframe.webkitRequestFullscreen) {
-            iframe.webkitRequestFullscreen();
-        } else if (iframe.msRequestFullscreen) {
-            iframe.msRequestFullscreen();
-        }
-    } else {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        }
-    }
-};
