@@ -59,6 +59,7 @@ searchInput.addEventListener('input', (e) => {
 });
 
 fetchGames();
+
 function toggleFullscreen() {
     // Wir holen uns das Iframe, in dem das Spiel läuft
     var iframe = document.getElementById("game-frame");
