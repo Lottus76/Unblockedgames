@@ -10,7 +10,7 @@ const currentGameTitle = document.getElementById('currentGameTitle');
 
 async function fetchGames() {
     try {
-        const response = await fetch('games.json');
+        const response = await fetch('./games.json');
         allGames = await response.json();
         displayGames(allGames);
     } catch (error) {
