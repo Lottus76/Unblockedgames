@@ -1,0 +1,14 @@
+[
+    {
+        "id": "chrome-dino",
+        "title": "Chrome Dino",
+        "thumbnail": "https://via.placeholder.com/220x140?text=Chrome+Dino",
+        "embedUrl": "gamez/chromedino/index.html"
+    },
+    {
+        "id": "csgo-clicker",
+        "title": "CSGO Clicker",
+        "thumbnail": "https://via.placeholder.com/220x140?text=CSGO+Clicker",
+        "embedUrl": "gamez/CSGOClicker/index.html"
+    }
+]
