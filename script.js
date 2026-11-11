@@ -57,3 +57,4 @@ searchInput.addEventListener('input', (e) => {
     const filtered = allGames.filter(game => game.title.toLowerCase().includes(term));
     displayGames(filtered);
 });
+fetchGames();
