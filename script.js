@@ -59,3 +59,24 @@ searchInput.addEventListener('input', (e) => {
 });
 
 fetchGames();
+
+function toggleFullscreen() {
+    // Wir holen uns das Iframe, in dem das Spiel läuft
+    var iframe = document.getElementById("game-frame");
+
+    if (!document.fullscreenElement) {
+        // Wenn noch kein Vollbild aktiv ist, schalte ins Vollbild
+        if (iframe.requestFullscreen) {
+            iframe.requestFullscreen();
+        } else if (iframe.webkitRequestFullscreen) { /* Safari / iOS */
+            iframe.webkitRequestFullscreen();
+        } else if (iframe.msRequestFullscreen) { /* IE/Edge */
+            iframe.msRequestFullscreen();
+        }
+    } else {
+        // Wenn bereits im Vollbild, schalte es wieder aus
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+    }
+}
