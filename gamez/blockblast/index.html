@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Block Blast</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            height: 100vh;
+            overflow: hidden;
+            padding: 15px 10px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 420px;
+            background: #1e293b;
+            padding: 12px 20px;
+            border-radius: 14px;
+            border: 1px solid #334155;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .score-box {
+            text-align: center;
+        }
+
+        .score-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .score-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #f8fafc;
+        }
+
+        .best-value {
+            color: #fbbf24;
+        }
+
+        canvas {
+            display: block;
+            touch-action: none;
+        }
+
+        #gameCanvas {
+            background-color: #1e293b;
+            border-radius: 14px;
+            border: 2px solid #334155;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+
+        .dock {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            max-width: 420px;
+            height: 115px;
+            background: #1e293b;
+            border-radius: 14px;
+            border: 1px solid #334155;
+            padding: 5px;
+        }
+
+        .piece-slot {
+            width: 31%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #dragCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        #gameOverModal {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.88);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            backdrop-filter: blur(4px);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .modal-box {
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 18px;
+            border: 1px solid #475569;
+            text-align: center;
+            width: 85%;
+            max-width: 340px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+        }
+
+        .modal-box h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #ef4444;
+        }
+
+        .modal-box p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: #cbd5e1;
+        }
+
+        .restart-btn {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .restart-btn:active {
+            background: #4f46e5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="score-box">
+            <div class="score-label">Punkte</div>
+            <div class="score-value" id="scoreDisplay">0</div>
+        </div>
+        <div class="score-box">
+            <div class="score-label">Rekord</div>
+            <div class="score-value best-value" id="bestDisplay">0</div>
+        </div>
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <div class="dock" id="dock">
+        <div class="piece-slot" data-index="0"><canvas id="slot0"></canvas></div>
+        <div class="piece-slot" data-index="1"><canvas id="slot1"></canvas></div>
+        <div class="piece-slot" data-index="2"><canvas id="slot2"></canvas></div>
+    </div>
+
+    <canvas id="dragCanvas"></canvas>
+
+    <div id="gameOverModal" class="hidden">
+        <div class="modal-box">
+            <h2>Kein Zug mehr!</h2>
+            <p>Endstand: <strong id="finalScore">0</strong></p>
+            <button class="restart-btn" id="restartBtn">Nochmal spielen</button>
+        </div>
+    </div>
+
+    <script>
+        const GRID_SIZE = 8;
+        const COLORS = [
+            '#ef4444', // Rot
+            '#f97316', // Orange
+            '#eab308', // Gelb
+            '#22c55e', // Grün
+            '#06b6d4', // Cyan
+            '#3b82f6', // Blau
+            '#a855f7', // Lila
+            '#ec4899'  // Pink
+        ];
+
+        const SHAPES = [
+            [[1]], // 1x1
+            [[1, 1]], // 1x2
+            [[1], [1]], // 2x1
+            [[1, 1, 1]], // 1x3
+            [[1], [1], [1]], // 3x1
+            [[1, 1, 1, 1]], // 1x4
+            [[1], [1], [1], [1]], // 4x1
+            [[1, 1], [1, 1]], // 2x2
+            [[1, 1, 1], [1, 1, 1], [1, 1, 1]], // 3x3
+            [[1, 0], [1, 1]], // L klein
+            [[0, 1], [1, 1]], // J klein
+            [[1, 1], [1, 0]], // r klein
+            [[1, 1], [0, 1]], // 7 klein
+            [[1, 0], [1, 0], [1, 1]], // L groß
+            [[0, 1], [0, 1], [1, 1]], // J groß
+            [[1, 1, 1], [0, 1, 0]], // T
+            [[0, 1, 0], [1, 1, 1]], // T umgedreht
+            [[1, 1, 0], [0, 1, 1]], // Z
+            [[0, 1, 1], [1, 1, 0]]  // S
+        ];
+
+        let grid = [];
+        let dockPieces = [null, null, null];
+        let score = 0;
+        let bestScore = parseInt(localStorage.getItem('blockBlastBest')) || 0;
+        let cellSize = 40;
+        let draggingIndex = -1;
+        let dragPos = { x: 0, y: 0 };
+        let ghostCell = null;
+        let isTouch = false;
+
+        const gameCanvas = document.getElementById('gameCanvas');
+        const ctx = gameCanvas.getContext('2d');
+        const dragCanvas = document.getElementById('dragCanvas');
+        const dragCtx = dragCanvas.getContext('2d');
+        const slotCanvases = [
+            document.getElementById('slot0'),
+            document.getElementById('slot1'),
+            document.getElementById('slot2')
+        ];
+
+        function resize() {
+            const maxW = Math.min(window.innerWidth - 24, 420);
+            const maxH = window.innerHeight - 230;
+            const boardPx = Math.floor(Math.min(maxW, maxH) / GRID_SIZE) * GRID_SIZE;
+            cellSize = boardPx / GRID_SIZE;
+
+            gameCanvas.width = boardPx;
+            gameCanvas.height = boardPx;
+
+            dragCanvas.width = window.innerWidth;
+            dragCanvas.height = window.innerHeight;
+
+            slotCanvases.forEach((sc, i) => {
+                sc.width = 100;
+                sc.height = 100;
+                drawSlot(i);
+            });
+
+            drawBoard();
+        }
+
+        function initGame() {
+            grid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(null));
+            score = 0;
+            updateScore(0);
+            document.getElementById('gameOverModal').classList.add('hidden');
+            spawnDockPieces();
+            resize();
+        }
+
+        function updateScore(points) {
+            score += points;
+            document.getElementById('scoreDisplay').textContent = score;
+            if (score > bestScore) {
+                bestScore = score;
+                localStorage.setItem('blockBlastBest', bestScore);
+            }
+            document.getElementById('bestDisplay').textContent = bestScore;
+        }
+
+        function spawnDockPieces() {
+            for (let i = 0; i < 3; i++) {
+                const shape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+                const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+                dockPieces[i] = { shape, color };
+                drawSlot(i);
+            }
+            checkGameOver();
+        }
+
+        function drawBlock(context, x, y, size, color, alpha = 1) {
+            context.save();
+            context.globalAlpha = alpha;
+            const pad = 2;
+            const r = 6;
+            const bx = x + pad;
+            const by = y + pad;
+            const bw = size - pad * 2;
+            const bh = size - pad * 2;
+
+            context.fillStyle = color;
+            context.beginPath();
+            context.roundRect(bx, by, bw, bh, r);
+            context.fill();
+
+            // Glanz-Effekt oben
+            context.fillStyle = 'rgba(255,255,255,0.22)';
+            context.beginPath();
+            context.roundRect(bx + 2, by + 2, bw - 4, bh * 0.35, 4);
+            context.fill();
+            context.restore();
+        }
+
+        function drawBoard() {
+            ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+
+            // Raster zeichnen
+            for (let r = 0; r < GRID_SIZE; r++) {
+                for (let c = 0; c < GRID_SIZE; c++) {
+                    const x = c * cellSize;
+                    const y = r * cellSize;
+                    ctx.fillStyle = '#0f172a';
+                    ctx.beginPath();
+                    ctx.roundRect(x + 2, y + 2, cellSize - 4, cellSize - 4, 6);
+                    ctx.fill();
+
+                    if (grid[r][c]) {
+                        drawBlock(ctx, x, y, cellSize, grid[r][c]);
+                    }
+                }
+            }
+
+            // Vorschau-Schatten (Ghost)
+            if (draggingIndex !== -1 && ghostCell && dockPieces[draggingIndex]) {
+                const piece = dockPieces[draggingIndex];
+                for (let r = 0; r < piece.shape.length; r++) {
+                    for (let c = 0; c < piece.shape[r].length; c++) {
+                        if (piece.shape[r][c]) {
+                            const gx = (ghostCell.c + c) * cellSize;
+                            const gy = (ghostCell.r + r) * cellSize;
+                            drawBlock(ctx, gx, gy, cellSize, piece.color, 0.35);
+                        }
+                    }
+                }
+            }
+        }
+
+        function drawSlot(index) {
+            const sc = slotCanvases[index];
+            const sCtx = sc.getContext('2d');
+            sCtx.clearRect(0, 0, sc.width, sc.height);
+
+            const piece = dockPieces[index];
+            if (!piece || index === draggingIndex) return;
+
+            const miniSize = 20;
+            const rows = piece.shape.length;
+            const cols = piece.shape[0].length;
+            const offsetX = (sc.width - cols * miniSize) / 2;
+            const offsetY = (sc.height - rows * miniSize) / 2;
+
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    if (piece.shape[r][c]) {
+                        drawBlock(sCtx, offsetX + c * miniSize, offsetY + r * miniSize, miniSize, piece.color);
+                    }
+                }
+            }
+        }
+
+        function drawDragging() {
+            dragCtx.clearRect(0, 0, dragCanvas.width, dragCanvas.height);
+            if (draggingIndex === -1 || !dockPieces[draggingIndex]) return;
+
+            const piece = dockPieces[draggingIndex];
+            const rows = piece.shape.length;
+            const cols = piece.shape[0].length;
+            const touchOffset = isTouch ? 75 : 0; // Block schwebt über dem Finger
+
+            const startX = dragPos.x - (cols * cellSize) / 2;
+            const startY = dragPos.y - (rows * cellSize) / 2 - touchOffset;
+
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    if (piece.shape[r][c]) {
+                        drawBlock(dragCtx, startX + c * cellSize, startY + r * cellSize, cellSize, piece.color, 0.95);
+                    }
+                }
+            }
+
+            // Zielzelle auf dem Spielfeld berechnen
+            const rect = gameCanvas.getBoundingClientRect();
+            const gridC = Math.round((startX - rect.left) / cellSize);
+            const gridR = Math.round((startY - rect.top) / cellSize);
+
+            if (canPlace(piece.shape, gridR, gridC)) {
+                ghostCell = { r: gridR, c: gridC };
+            } else {
+                ghostCell = null;
+            }
+            drawBoard();
+        }
+
+        function canPlace(shape, startR, startC) {
+            for (let r = 0; r < shape.length; r++) {
+                for (let c = 0; c < shape[r].length; c++) {
+                    if (shape[r][c]) {
+                        const nr = startR + r;
+                        const nc = startC + c;
+                        if (nr < 0 || nr >= GRID_SIZE || nc < 0 || nc >= GRID_SIZE || grid[nr][nc] !== null) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
+        function placePiece(piece, startR, startC) {
+            let blockCount = 0;
+            for (let r = 0; r < piece.shape.length; r++) {
+                for (let c = 0; c < piece.shape[r].length; c++) {
+                    if (piece.shape[r][c]) {
+                        grid[startR + r][startC + c] = piece.color;
+                        blockCount++;
+                    }
+                }
+            }
+            updateScore(blockCount * 10);
+            clearLines();
+        }
+
+        function clearLines() {
+            let rowsToClear = [];
+            let colsToClear = [];
+
+            for (let r = 0; r < GRID_SIZE; r++) {
+                if (grid[r].every(cell => cell !== null)) rowsToClear.push(r);
+            }
+            for (let c = 0; c < GRID_SIZE; c++) {
+                let full = true;
+                for (let r = 0; r < GRID_SIZE; r++) {
+                    if (grid[r][c] === null) { full = false; break; }
+                }
+                if (full) colsToClear.push(c);
+            }
+
+            rowsToClear.forEach(r => {
+                for (let c = 0; c < GRID_SIZE; c++) grid[r][c] = null;
+            });
+            colsToClear.forEach(c => {
+                for (let r = 0; r < GRID_SIZE; r++) grid[r][c] = null;
+            });
+
+            const totalCleared = rowsToClear.length + colsToClear.length;
+            if (totalCleared > 0) {
+                updateScore(totalCleared * 100 * totalCleared);
+            }
+        }
+
+        function checkGameOver() {
+            const activePieces = dockPieces.filter(p => p !== null);
+            if (activePieces.length === 0) return;
+
+            for (let piece of activePieces) {
+                for (let r = 0; r < GRID_SIZE; r++) {
+                    for (let c = 0; c < GRID_SIZE; c++) {
+                        if (canPlace(piece.shape, r, c)) return; // Mindestens ein Zug möglich
+                    }
+                }
+            }
+
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('gameOverModal').classList.remove('hidden');
+        }
+
+        // Touch & Maus Steuerung
+        function startDrag(index, clientX, clientY, touchMode) {
+            if (!dockPieces[index]) return;
+            isTouch = touchMode;
+            draggingIndex = index;
+            dragPos = { x: clientX, y: clientY };
+            drawSlot(index);
+            drawDragging();
+        }
+
+        function moveDrag(clientX, clientY) {
+            if (draggingIndex === -1) return;
+            dragPos = { x: clientX, y: clientY };
+            drawDragging();
+        }
+
+        function endDrag() {
+            if (draggingIndex === -1) return;
+            const index = draggingIndex;
+            draggingIndex = -1;
+            dragCtx.clearRect(0, 0, dragCanvas.width, dragCanvas.height);
+
+            if (ghostCell && dockPieces[index]) {
+                placePiece(dockPieces[index], ghostCell.r, ghostCell.c);
+                dockPieces[index] = null;
+                ghostCell = null;
+
+                if (dockPieces.every(p => p === null)) {
+                    spawnDockPieces();
+                } else {
+                    checkGameOver();
+                }
+            }
+            drawSlot(index);
+            drawBoard();
+        }
+
+        document.querySelectorAll('.piece-slot').forEach(slot => {
+            const idx = parseInt(slot.dataset.index);
+            slot.addEventListener('mousedown', e => startDrag(idx, e.clientX, e.clientY, false));
+            slot.addEventListener('touchstart', e => {
+                e.preventDefault();
+                const t = e.touches[0];
+                startDrag(idx, t.clientX, t.clientY, true);
+            }, { passive: false });
+        });
+
+        window.addEventListener('mousemove', e => moveDrag(e.clientX, e.clientY));
+        window.addEventListener('touchmove', e => {
+            if (draggingIndex !== -1) {
+                e.preventDefault();
+                const t = e.touches[0];
+                moveDrag(t.clientX, t.clientY);
+            }
+        }, { passive: false });
+
+        window.addEventListener('mouseup', endDrag);
+        window.addEventListener('touchend', endDrag);
+        window.addEventListener('resize', resize);
+        document.getElementById('restartBtn').addEventListener('click', initGame);
+
+        initGame();
+    </script>
+</body>
+</html>
