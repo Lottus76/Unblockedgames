@@ -12,19 +12,19 @@
             user-select: none;
             -webkit-user-select: none;
             touch-action: none;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
         body {
-            background-color: #0f172a;
-            color: #f8fafc;
+            background: radial-gradient(circle at top, #1e1b4b 0%, #090d16 100%);
+            color: #ffffff;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            height: 100vh;
+            height: 100dvh;
             overflow: hidden;
-            padding: 15px 10px;
+            padding: 12px 10px 18px 10px;
         }
 
         .header {
@@ -33,11 +33,12 @@
             align-items: center;
             width: 100%;
             max-width: 420px;
-            background: #1e293b;
-            padding: 12px 20px;
-            border-radius: 14px;
-            border: 1px solid #334155;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            background: rgba(30, 41, 59, 0.75);
+            backdrop-filter: blur(8px);
+            padding: 10px 22px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
         }
 
         .score-box {
@@ -45,20 +46,28 @@
         }
 
         .score-label {
-            font-size: 0.75rem;
+            font-size: 0.72rem;
+            font-weight: 700;
             color: #94a3b8;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.2px;
         }
 
         .score-value {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #f8fafc;
+            font-size: 1.65rem;
+            font-weight: 900;
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.25);
+            transition: transform 0.15s ease;
+        }
+
+        .score-bump {
+            transform: scale(1.25);
         }
 
         .best-value {
             color: #fbbf24;
+            text-shadow: 0 0 14px rgba(251, 191, 36, 0.5);
         }
 
         canvas {
@@ -67,10 +76,10 @@
         }
 
         #gameCanvas {
-            background-color: #1e293b;
-            border-radius: 14px;
-            border: 2px solid #334155;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            background-color: #111827;
+            border-radius: 16px;
+            border: 2px solid rgba(139, 92, 246, 0.35);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.65), inset 0 0 20px rgba(0, 0, 0, 0.6);
         }
 
         .dock {
@@ -79,10 +88,11 @@
             align-items: center;
             width: 100%;
             max-width: 420px;
-            height: 115px;
-            background: #1e293b;
-            border-radius: 14px;
-            border: 1px solid #334155;
+            height: 112px;
+            background: rgba(30, 41, 59, 0.65);
+            backdrop-filter: blur(8px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 5px;
         }
 
@@ -94,7 +104,7 @@
             align-items: center;
         }
 
-        #dragCanvas {
+        #fxCanvas {
             position: fixed;
             top: 0;
             left: 0;
@@ -105,13 +115,13 @@
         #gameOverModal {
             position: fixed;
             inset: 0;
-            background: rgba(15, 23, 42, 0.88);
+            background: rgba(9, 13, 22, 0.88);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 200;
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(6px);
         }
 
         .hidden {
@@ -119,43 +129,46 @@
         }
 
         .modal-box {
-            background: #1e293b;
+            background: linear-gradient(145deg, #1e293b, #0f172a);
             padding: 30px;
-            border-radius: 18px;
-            border: 1px solid #475569;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
             text-align: center;
             width: 85%;
             max-width: 340px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75);
         }
 
         .modal-box h2 {
-            font-size: 1.8rem;
+            font-size: 1.9rem;
+            font-weight: 900;
             margin-bottom: 10px;
-            color: #ef4444;
+            background: linear-gradient(to right, #f43f5e, #fb923c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .modal-box p {
-            font-size: 1.1rem;
-            margin-bottom: 20px;
+            font-size: 1.15rem;
+            margin-bottom: 22px;
             color: #cbd5e1;
         }
 
         .restart-btn {
-            background: #6366f1;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
             color: white;
             border: none;
-            padding: 12px 28px;
+            padding: 14px 28px;
             font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 10px;
+            font-weight: 800;
+            border-radius: 12px;
             cursor: pointer;
             width: 100%;
-            transition: background 0.2s;
+            box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
         }
 
         .restart-btn:active {
-            background: #4f46e5;
+            transform: scale(0.96);
         }
     </style>
 </head>
@@ -180,7 +193,7 @@
         <div class="piece-slot" data-index="2"><canvas id="slot2"></canvas></div>
     </div>
 
-    <canvas id="dragCanvas"></canvas>
+    <canvas id="fxCanvas"></canvas>
 
     <div id="gameOverModal" class="hidden">
         <div class="modal-box">
@@ -192,42 +205,35 @@
 
     <script>
         const GRID_SIZE = 8;
-        const COLORS = [
-            '#ef4444', // Rot
-            '#f97316', // Orange
-            '#eab308', // Gelb
-            '#22c55e', // Grün
-            '#06b6d4', // Cyan
-            '#3b82f6', // Blau
-            '#a855f7', // Lila
-            '#ec4899'  // Pink
+        // Knallige Original-Farbpaletten (Hauptfarbe, Hell, Dunkel)
+        const PALETTES = [
+            { main: '#ff2a5f', light: '#ff7597', dark: '#b8002e' }, // Neon Rot-Pink
+            { main: '#ff7b00', light: '#ffb366', dark: '#b34d00' }, // Leucht-Orange
+            { main: '#ffd500', light: '#fff080', dark: '#b89600' }, // Sonnengelb
+            { main: '#00e676', light: '#75ffba', dark: '#00994d' }, // Smaragdgrün
+            { main: '#00d4ff', light: '#80eaff', dark: '#0088a3' }, // Electric Cyan
+            { main: '#3b82f6', light: '#93c5fd', dark: '#1d4ed8' }, // Königsblau
+            { main: '#b517ff', light: '#df80ff', dark: '#7200a8' }  // Neon Lila
         ];
 
         const SHAPES = [
-            [[1]], // 1x1
-            [[1, 1]], // 1x2
-            [[1], [1]], // 2x1
-            [[1, 1, 1]], // 1x3
-            [[1], [1], [1]], // 3x1
-            [[1, 1, 1, 1]], // 1x4
-            [[1], [1], [1], [1]], // 4x1
-            [[1, 1], [1, 1]], // 2x2
-            [[1, 1, 1], [1, 1, 1], [1, 1, 1]], // 3x3
-            [[1, 0], [1, 1]], // L klein
-            [[0, 1], [1, 1]], // J klein
-            [[1, 1], [1, 0]], // r klein
-            [[1, 1], [0, 1]], // 7 klein
-            [[1, 0], [1, 0], [1, 1]], // L groß
-            [[0, 1], [0, 1], [1, 1]], // J groß
-            [[1, 1, 1], [0, 1, 0]], // T
-            [[0, 1, 0], [1, 1, 1]], // T umgedreht
-            [[1, 1, 0], [0, 1, 1]], // Z
-            [[0, 1, 1], [1, 1, 0]]  // S
+            [[1]],
+            [[1, 1]], [[1], [1]],
+            [[1, 1, 1]], [[1], [1], [1]],
+            [[1, 1, 1, 1]], [[1], [1], [1], [1]],
+            [[1, 1], [1, 1]],
+            [[1, 1, 1], [1, 1, 1], [1, 1, 1]],
+            [[1, 0], [1, 1]], [[0, 1], [1, 1]], [[1, 1], [1, 0]], [[1, 1], [0, 1]],
+            [[1, 0], [1, 0], [1, 1]], [[0, 1], [0, 1], [1, 1]],
+            [[1, 1, 1], [0, 1, 0]], [[0, 1, 0], [1, 1, 1]],
+            [[1, 1, 0], [0, 1, 1]], [[0, 1, 1], [1, 1, 0]]
         ];
 
         let grid = [];
+        let popScale = [];
         let dockPieces = [null, null, null];
         let score = 0;
+        let comboCount = 0;
         let bestScore = parseInt(localStorage.getItem('blockBlastBest')) || 0;
         let cellSize = 40;
         let draggingIndex = -1;
@@ -235,10 +241,15 @@
         let ghostCell = null;
         let isTouch = false;
 
+        // Effekte: Partikel, schwebende Texte, Screen-Shake
+        let particles = [];
+        let floatingTexts = [];
+        let shakeTime = 0;
+
         const gameCanvas = document.getElementById('gameCanvas');
         const ctx = gameCanvas.getContext('2d');
-        const dragCanvas = document.getElementById('dragCanvas');
-        const dragCtx = dragCanvas.getContext('2d');
+        const fxCanvas = document.getElementById('fxCanvas');
+        const fxCtx = fxCanvas.getContext('2d');
         const slotCanvases = [
             document.getElementById('slot0'),
             document.getElementById('slot1'),
@@ -247,28 +258,30 @@
 
         function resize() {
             const maxW = Math.min(window.innerWidth - 24, 420);
-            const maxH = window.innerHeight - 230;
+            const maxH = window.innerHeight - 220;
             const boardPx = Math.floor(Math.min(maxW, maxH) / GRID_SIZE) * GRID_SIZE;
             cellSize = boardPx / GRID_SIZE;
 
             gameCanvas.width = boardPx;
             gameCanvas.height = boardPx;
 
-            dragCanvas.width = window.innerWidth;
-            dragCanvas.height = window.innerHeight;
+            fxCanvas.width = window.innerWidth;
+            fxCanvas.height = window.innerHeight;
 
             slotCanvases.forEach((sc, i) => {
-                sc.width = 100;
-                sc.height = 100;
+                sc.width = 96;
+                sc.height = 96;
                 drawSlot(i);
             });
-
-            drawBoard();
         }
 
         function initGame() {
             grid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(null));
+            popScale = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(1));
             score = 0;
+            comboCount = 0;
+            particles = [];
+            floatingTexts = [];
             updateScore(0);
             document.getElementById('gameOverModal').classList.add('hidden');
             spawnDockPieces();
@@ -277,7 +290,14 @@
 
         function updateScore(points) {
             score += points;
-            document.getElementById('scoreDisplay').textContent = score;
+            const scoreEl = document.getElementById('scoreDisplay');
+            scoreEl.textContent = score;
+            if (points > 0) {
+                scoreEl.classList.remove('score-bump');
+                void scoreEl.offsetWidth;
+                scoreEl.classList.add('score-bump');
+                setTimeout(() => scoreEl.classList.remove('score-bump'), 160);
+            }
             if (score > bestScore) {
                 bestScore = score;
                 localStorage.setItem('blockBlastBest', bestScore);
@@ -288,56 +308,88 @@
         function spawnDockPieces() {
             for (let i = 0; i < 3; i++) {
                 const shape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
-                const color = COLORS[Math.floor(Math.random() * COLORS.length)];
-                dockPieces[i] = { shape, color };
+                const palette = PALETTES[Math.floor(Math.random() * PALETTES.length)];
+                dockPieces[i] = { shape, palette };
                 drawSlot(i);
             }
             checkGameOver();
         }
 
-        function drawBlock(context, x, y, size, color, alpha = 1) {
+        // 3D Juicy Block zeichnen
+        function drawBlock(context, x, y, size, palette, alpha = 1, scale = 1) {
             context.save();
             context.globalAlpha = alpha;
+
+            const cx = x + size / 2;
+            const cy = y + size / 2;
+            context.translate(cx, cy);
+            context.scale(scale, scale);
+            context.translate(-cx, -cy);
+
             const pad = 2;
-            const r = 6;
+            const r = 7;
             const bx = x + pad;
             const by = y + pad;
             const bw = size - pad * 2;
             const bh = size - pad * 2;
 
-            context.fillStyle = color;
+            // 3D Schatten-Kante unten
+            context.fillStyle = palette.dark;
             context.beginPath();
             context.roundRect(bx, by, bw, bh, r);
             context.fill();
 
-            // Glanz-Effekt oben
-            context.fillStyle = 'rgba(255,255,255,0.22)';
+            // Hauptkörper mit Farbverlauf
+            const grad = context.createLinearGradient(bx, by, bx, by + bh - 3);
+            grad.addColorStop(0, palette.light);
+            grad.addColorStop(0.25, palette.main);
+            grad.addColorStop(1, palette.dark);
+
+            context.fillStyle = grad;
             context.beginPath();
-            context.roundRect(bx + 2, by + 2, bw - 4, bh * 0.35, 4);
+            context.roundRect(bx + 1, by + 1, bw - 2, bh - 4, r - 1);
             context.fill();
+
+            // Inneres Leuchten / Glanz
+            context.fillStyle = 'rgba(255, 255, 255, 0.35)';
+            context.beginPath();
+            context.roundRect(bx + 4, by + 3, bw - 8, bh * 0.28, 4);
+            context.fill();
+
             context.restore();
         }
 
         function drawBoard() {
-            ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+            ctx.save();
+            if (shakeTime > 0) {
+                const dx = (Math.random() - 0.5) * 8;
+                const dy = (Math.random() - 0.5) * 8;
+                ctx.translate(dx, dy);
+                shakeTime--;
+            }
 
-            // Raster zeichnen
+            ctx.clearRect(-10, -10, gameCanvas.width + 20, gameCanvas.height + 20);
+
+            // Spielfeld-Zellen
             for (let r = 0; r < GRID_SIZE; r++) {
                 for (let c = 0; c < GRID_SIZE; c++) {
                     const x = c * cellSize;
                     const y = r * cellSize;
-                    ctx.fillStyle = '#0f172a';
+                    ctx.fillStyle = '#192236';
                     ctx.beginPath();
-                    ctx.roundRect(x + 2, y + 2, cellSize - 4, cellSize - 4, 6);
+                    ctx.roundRect(x + 2, y + 2, cellSize - 4, cellSize - 4, 7);
                     ctx.fill();
 
                     if (grid[r][c]) {
-                        drawBlock(ctx, x, y, cellSize, grid[r][c]);
+                        if (popScale[r][c] > 1) {
+                            popScale[r][c] = Math.max(1, popScale[r][c] - 0.04);
+                        }
+                        drawBlock(ctx, x, y, cellSize, grid[r][c], 1, popScale[r][c]);
                     }
                 }
             }
 
-            // Vorschau-Schatten (Ghost)
+            // Ghost-Vorschau + Vorschau, welche Reihen voll werden!
             if (draggingIndex !== -1 && ghostCell && dockPieces[draggingIndex]) {
                 const piece = dockPieces[draggingIndex];
                 for (let r = 0; r < piece.shape.length; r++) {
@@ -345,11 +397,12 @@
                         if (piece.shape[r][c]) {
                             const gx = (ghostCell.c + c) * cellSize;
                             const gy = (ghostCell.r + r) * cellSize;
-                            drawBlock(ctx, gx, gy, cellSize, piece.color, 0.35);
+                            drawBlock(ctx, gx, gy, cellSize, piece.palette, 0.42);
                         }
                     }
                 }
             }
+            ctx.restore();
         }
 
         function drawSlot(index) {
@@ -360,7 +413,7 @@
             const piece = dockPieces[index];
             if (!piece || index === draggingIndex) return;
 
-            const miniSize = 20;
+            const miniSize = 21;
             const rows = piece.shape.length;
             const cols = piece.shape[0].length;
             const offsetX = (sc.width - cols * miniSize) / 2;
@@ -369,43 +422,120 @@
             for (let r = 0; r < rows; r++) {
                 for (let c = 0; c < cols; c++) {
                     if (piece.shape[r][c]) {
-                        drawBlock(sCtx, offsetX + c * miniSize, offsetY + r * miniSize, miniSize, piece.color);
+                        drawBlock(sCtx, offsetX + c * miniSize, offsetY + r * miniSize, miniSize, piece.palette);
                     }
                 }
             }
         }
 
-        function drawDragging() {
-            dragCtx.clearRect(0, 0, dragCanvas.width, dragCanvas.height);
-            if (draggingIndex === -1 || !dockPieces[draggingIndex]) return;
+        function spawnExplosion(gridR, gridC, palette) {
+            const rect = gameCanvas.getBoundingClientRect();
+            const centerX = rect.left + (gridC + 0.5) * cellSize;
+            const centerY = rect.top + (gridR + 0.5) * cellSize;
 
-            const piece = dockPieces[draggingIndex];
-            const rows = piece.shape.length;
-            const cols = piece.shape[0].length;
-            const touchOffset = isTouch ? 75 : 0; // Block schwebt über dem Finger
+            for (let i = 0; i < 10; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = 2 + Math.random() * 5.5;
+                particles.push({
+                    x: centerX,
+                    y: centerY,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed - 1.5,
+                    size: 4 + Math.random() * 5,
+                    color: Math.random() > 0.3 ? palette.main : palette.light,
+                    life: 1.0
+                });
+            }
+        }
 
-            const startX = dragPos.x - (cols * cellSize) / 2;
-            const startY = dragPos.y - (rows * cellSize) / 2 - touchOffset;
+        function spawnFloatingText(text, color = '#ffd500') {
+            const rect = gameCanvas.getBoundingClientRect();
+            floatingTexts.push({
+                text,
+                x: rect.left + rect.width / 2,
+                y: rect.top + rect.height / 2,
+                vy: -2.2,
+                life: 1.0,
+                color
+            });
+        }
 
-            for (let r = 0; r < rows; r++) {
-                for (let c = 0; c < cols; c++) {
-                    if (piece.shape[r][c]) {
-                        drawBlock(dragCtx, startX + c * cellSize, startY + r * cellSize, cellSize, piece.color, 0.95);
+        function renderLoop() {
+            drawBoard();
+            fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+
+            // Schwebender Block beim Ziehen
+            if (draggingIndex !== -1 && dockPieces[draggingIndex]) {
+                const piece = dockPieces[draggingIndex];
+                const rows = piece.shape.length;
+                const cols = piece.shape[0].length;
+                const touchOffset = isTouch ? 80 : 0;
+
+                const startX = dragPos.x - (cols * cellSize) / 2;
+                const startY = dragPos.y - (rows * cellSize) / 2 - touchOffset;
+
+                for (let r = 0; r < rows; r++) {
+                    for (let c = 0; c < cols; c++) {
+                        if (piece.shape[r][c]) {
+                            drawBlock(fxCtx, startX + c * cellSize, startY + r * cellSize, cellSize, piece.palette, 0.96, 1.05);
+                        }
                     }
                 }
+
+                const rect = gameCanvas.getBoundingClientRect();
+                const gridC = Math.round((startX - rect.left) / cellSize);
+                const gridR = Math.round((startY - rect.top) / cellSize);
+                ghostCell = canPlace(piece.shape, gridR, gridC) ? { r: gridR, c: gridC } : null;
             }
 
-            // Zielzelle auf dem Spielfeld berechnen
-            const rect = gameCanvas.getBoundingClientRect();
-            const gridC = Math.round((startX - rect.left) / cellSize);
-            const gridR = Math.round((startY - rect.top) / cellSize);
+            // Partikel animieren
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.22; // Schwerkraft
+                p.life -= 0.03;
 
-            if (canPlace(piece.shape, gridR, gridC)) {
-                ghostCell = { r: gridR, c: gridC };
-            } else {
-                ghostCell = null;
+                if (p.life <= 0) {
+                    particles.splice(i, 1);
+                    continue;
+                }
+
+                fxCtx.save();
+                fxCtx.globalAlpha = p.life;
+                fxCtx.fillStyle = p.color;
+                fxCtx.shadowColor = p.color;
+                fxCtx.shadowBlur = 8;
+                fxCtx.beginPath();
+                fxCtx.roundRect(p.x - p.size / 2, p.y - p.size / 2, p.size, p.size, 3);
+                fxCtx.fill();
+                fxCtx.restore();
             }
-            drawBoard();
+
+            // Kombo-Texte animieren
+            for (let i = floatingTexts.length - 1; i >= 0; i--) {
+                const ft = floatingTexts[i];
+                ft.y += ft.vy;
+                ft.life -= 0.022;
+
+                if (ft.life <= 0) {
+                    floatingTexts.splice(i, 1);
+                    continue;
+                }
+
+                fxCtx.save();
+                fxCtx.globalAlpha = ft.life;
+                fxCtx.font = '900 28px "Segoe UI", sans-serif';
+                fxCtx.textAlign = 'center';
+                fxCtx.fillStyle = ft.color;
+                fxCtx.strokeStyle = '#090d16';
+                fxCtx.lineWidth = 5;
+                fxCtx.strokeText(ft.text, ft.x, ft.y);
+                fxCtx.fillText(ft.text, ft.x, ft.y);
+                fxCtx.restore();
+            }
+
+            requestAnimationFrame(renderLoop);
         }
 
         function canPlace(shape, startR, startC) {
@@ -428,7 +558,8 @@
             for (let r = 0; r < piece.shape.length; r++) {
                 for (let c = 0; c < piece.shape[r].length; c++) {
                     if (piece.shape[r][c]) {
-                        grid[startR + r][startC + c] = piece.color;
+                        grid[startR + r][startC + c] = piece.palette;
+                        popScale[startR + r][startC + c] = 1.25;
                         blockCount++;
                     }
                 }
@@ -452,16 +583,36 @@
                 if (full) colsToClear.push(c);
             }
 
-            rowsToClear.forEach(r => {
-                for (let c = 0; c < GRID_SIZE; c++) grid[r][c] = null;
-            });
-            colsToClear.forEach(c => {
-                for (let r = 0; r < GRID_SIZE; r++) grid[r][c] = null;
-            });
-
             const totalCleared = rowsToClear.length + colsToClear.length;
             if (totalCleared > 0) {
-                updateScore(totalCleared * 100 * totalCleared);
+                comboCount++;
+                shakeTime = 8 + totalCleared * 3;
+
+                const clearedSet = new Set();
+                rowsToClear.forEach(r => {
+                    for (let c = 0; c < GRID_SIZE; c++) clearedSet.add(`${r},${c}`);
+                });
+                colsToClear.forEach(c => {
+                    for (let r = 0; r < GRID_SIZE; r++) clearedSet.add(`${r},${c}`);
+                });
+
+                clearedSet.forEach(key => {
+                    const [r, c] = key.split(',').map(Number);
+                    if (grid[r][c]) {
+                        spawnExplosion(r, c, grid[r][c]);
+                        grid[r][c] = null;
+                    }
+                });
+
+                const bonus = totalCleared * 100 * comboCount;
+                updateScore(bonus);
+
+                const label = totalCleared >= 3 ? `UNGLAUBLICH! +${bonus}` :
+                              totalCleared === 2 ? `SUPER! +${bonus}` :
+                              comboCount > 1 ? `COMBO x${comboCount}! +${bonus}` : `+${bonus}`;
+                spawnFloatingText(label, totalCleared >= 2 ? '#ff2a5f' : '#ffd500');
+            } else {
+                comboCount = 0;
             }
         }
 
@@ -472,7 +623,7 @@
             for (let piece of activePieces) {
                 for (let r = 0; r < GRID_SIZE; r++) {
                     for (let c = 0; c < GRID_SIZE; c++) {
-                        if (canPlace(piece.shape, r, c)) return; // Mindestens ein Zug möglich
+                        if (canPlace(piece.shape, r, c)) return;
                     }
                 }
             }
@@ -481,27 +632,23 @@
             document.getElementById('gameOverModal').classList.remove('hidden');
         }
 
-        // Touch & Maus Steuerung
         function startDrag(index, clientX, clientY, touchMode) {
             if (!dockPieces[index]) return;
             isTouch = touchMode;
             draggingIndex = index;
             dragPos = { x: clientX, y: clientY };
             drawSlot(index);
-            drawDragging();
         }
 
         function moveDrag(clientX, clientY) {
             if (draggingIndex === -1) return;
             dragPos = { x: clientX, y: clientY };
-            drawDragging();
         }
 
         function endDrag() {
             if (draggingIndex === -1) return;
             const index = draggingIndex;
             draggingIndex = -1;
-            dragCtx.clearRect(0, 0, dragCanvas.width, dragCanvas.height);
 
             if (ghostCell && dockPieces[index]) {
                 placePiece(dockPieces[index], ghostCell.r, ghostCell.c);
@@ -515,7 +662,6 @@
                 }
             }
             drawSlot(index);
-            drawBoard();
         }
 
         document.querySelectorAll('.piece-slot').forEach(slot => {
@@ -543,6 +689,7 @@
         document.getElementById('restartBtn').addEventListener('click', initGame);
 
         initGame();
+        requestAnimationFrame(renderLoop);
     </script>
 </body>
 </html>
