@@ -4,45 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>RetroArcade - Unblocked Games</title>
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <header class="navbar">
         <div class="logo" id="homeLogo">🎮 RetroArcade</div>
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Spiele suchen...">
-        </div>
+        <input type="text" id="searchInput" placeholder="Spiele suchen...">
     </header>
 
-    <main class="container">
-        <!-- Spiele-Übersicht -->
-        <section id="gameGridView">
-            <h1 class="section-title">Featured Games</h1>
-            <div class="game-grid" id="gameGrid">
-                <!-- Spiele werden hier per JS geladen -->
-            </div>
-        </section>
-
-        <!-- Spiel-Ansicht -->
-        <section id="gamePlayView" class="hidden">
-            <div class="game-controls">
-                <button id="backBtn" class="control-btn back-btn">⬅ Zurück</button>
-                <h2 id="currentGameTitle">Spieltitel</h2>
-                <button id="fullscreenBtn" class="control-btn fs-btn">⛶ Vollbild</button>
-            </div>
-            
-            <div class="iframe-wrapper" id="iframeWrapper">
-                <button id="exitMobileFsBtn" class="exit-fs-btn hidden">✖ Beenden</button>
-                <iframe id="gameIframe" src="" allowfullscreen allow="autoplay; fullscreen; gamepad"></iframe>
-            </div>
-        </section>
+    <main id="gameGridView" class="container">
+        <h1>Featured Games</h1>
+        <div id="gameGrid" class="game-grid"></div>
     </main>
 
-    <footer>
+    <section id="gamePlayView" class="game-play-container hidden">
+        <div class="game-header">
+            <button id="backBtn" class="btn">← Zurück</button>
+            <h2 id="currentGameTitle">Spieltitel</h2>
+            <div style="width: 80px;"></div>
+        </div>
+
+        <div class="iframe-wrapper" id="iframeWrapper">
+            <iframe id="gameIframe" src="" frameborder="0" allowfullscreen allow="fullscreen; autoplay; gamepad"></iframe>
+            <button id="fullscreenBtn" class="fs-corner-btn" title="Vollbild" aria-label="Vollbild">⛶</button>
+            <button id="exitMobileFsBtn" class="fs-corner-btn exit-fs hidden" title="Vollbild verlassen" aria-label="Vollbild verlassen">✕</button>
+        </div>
+    </section>
+
+    <footer class="footer">
         <p>© 2026 RetroArcade. All rights reserved.</p>
     </footer>
 
-    <script src="./script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
