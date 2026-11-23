@@ -8,7 +8,25 @@
     {
         "id": "block-blast",
         "title": "Block Blast",
-        "thumbnail": "https://via.placeholder.com/300x180/1e293b/6366f1?text=Block+Blast",
+        "thumbnail": "https://via.placeholder.com/300x180/1e293b/ec4899?text=Block+Blast",
         "embedUrl": "gamez/blockblast/index.html"
+    },
+    {
+        "id": "2048",
+        "title": "2048 Neon",
+        "thumbnail": "https://via.placeholder.com/300x180/1e293b/3b82f6?text=2048+Neon",
+        "embedUrl": "gamez/2048/index.html"
+    },
+    {
+        "id": "snake",
+        "title": "Neon Snake",
+        "thumbnail": "https://via.placeholder.com/300x180/1e293b/10b981?text=Neon+Snake",
+        "embedUrl": "gamez/snake/index.html"
+    },
+    {
+        "id": "flappy",
+        "title": "Neon Flappy",
+        "thumbnail": "https://via.placeholder.com/300x180/1e293b/f59e0b?text=Neon+Flappy",
+        "embedUrl": "gamez/flappy/index.html"
     }
 ]
